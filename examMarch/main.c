@@ -1,7 +1,7 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <stdbool.h>
 
 int generateRandomNumber(int min, int max) {
   int randomNumber = rand() % (max - min + 1) + min;
@@ -30,23 +30,24 @@ void getDimensions(FILE *saveFile) {
   fprintf(saveFile, "%d %d\n", width, length);
 }
 
-bool testBoat(int **fleet, int boardWidth, int boardLength,int x, int y, int orientation, int length) {
+bool testBoat(int **fleet, int boardWidth, int boardLength, int x, int y,
+              int orientation, int length) {
   for (int i = 0; i < length; i++) {
-      if ((orientation == 0) && !((*(*(fleet+x+i)+y))== 0))
-        return false;
+    if ((orientation == 0) && !((*(*(fleet + x + i) + y)) == 0))
+      return false;
 
-      if ((orientation == 1) && !((*(*(fleet+x)+y+i)) == 0))
-        return false;
+    if ((orientation == 1) && !((*(*(fleet + x) + y + i)) == 0))
+      return false;
   }
   return true;
 }
 
-void generateBoat(FILE *saveFile, int **fleet, int boardWidth, int boardLength) {
+void generateBoat(FILE *saveFile, int **fleet, int boardWidth,
+                  int boardLength) {
   int *boat = malloc(sizeof(int) * 4), x, y;
 
   boat[2] = generateRandomNumber(0, 1);
   boat[3] = generateRandomNumber(2, 4);
-
 
   bool valid = false;
 
@@ -54,7 +55,6 @@ void generateBoat(FILE *saveFile, int **fleet, int boardWidth, int boardLength) 
     if (boat[2] == 0) {
       x = generateRandomNumber(0, boardWidth - 1 - boat[3]);
       y = generateRandomNumber(0, boardLength - 1);
-
     }
     if (boat[2] == 1) {
       x = generateRandomNumber(0, boardWidth - 1);
@@ -62,13 +62,13 @@ void generateBoat(FILE *saveFile, int **fleet, int boardWidth, int boardLength) 
     }
 
     valid = testBoat(fleet, boardWidth, boardLength, x, y, boat[2], boat[3]);
-    if (valid) { 
+    if (valid) {
       for (int i = 0; i < boat[3]; i++) {
-        if (boat[2] == 0) 
-          *(*(fleet+x+i)+y) = 1;
+        if (boat[2] == 0)
+          *(*(fleet + x + i) + y) = 1;
 
-        if (boat[2] == 1) 
-          *(*(fleet+x)+y+i) = 1;
+        if (boat[2] == 1)
+          *(*(fleet + x) + y + i) = 1;
       }
       fprintf(saveFile, "%d %d %d %d\n", x, y, boat[2], boat[3]);
     }
@@ -76,22 +76,19 @@ void generateBoat(FILE *saveFile, int **fleet, int boardWidth, int boardLength) 
 }
 
 int **generateEmptyFleet(int width, int length) {
-  int **fleet = malloc(sizeof(int*) * (width + 1)), i, j;
+  int **fleet = malloc(sizeof(int *) * (width + 1)), i, j;
   for (i = 0; i < width; i++) {
-    *(fleet+i) = malloc(sizeof(int) * (length + 1));
+    *(fleet + i) = malloc(sizeof(int) * (length + 1));
     for (j = 0; j < length; j++) {
-      *(*(fleet+i)+j) = 0;
+      *(*(fleet + i) + j) = 0;
     }
-    *(*(fleet+i)+j) = -1;
+    *(*(fleet + i) + j) = -1;
   }
-  *(fleet+i) = NULL;
+  *(fleet + i) = NULL;
   return fleet;
 }
 
-void initSeed() {
-  srand(time(NULL));
-}
-
+void initSeed() { srand(time(NULL)); }
 
 void generateFleet(FILE *saveFile) {
   time_t t;
@@ -100,19 +97,18 @@ void generateFleet(FILE *saveFile) {
   char *length = malloc(sizeof(char) * 2), *width = malloc(sizeof(char) * 2);
   fseek(saveFile, 0, SEEK_SET);
 
-
   fscanf(saveFile, "%[^' ']", length);
   fgetc(saveFile);
   fscanf(saveFile, "%[^' ']", width);
 
   initSeed();
-  int **fleet = generateEmptyFleet(atoi(width), atoi(length)), boatNumber, amountOfBoats = generateRandomNumber(0, 51);
+  int **fleet = generateEmptyFleet(atoi(width), atoi(length)), boatNumber,
+      amountOfBoats = generateRandomNumber(0, 51);
   printf("boats %d\n", amountOfBoats);
 
   for (boatNumber = 0; boatNumber < amountOfBoats; boatNumber++) {
     generateBoat(saveFile, fleet, atoi(length), atoi(width));
   }
-
 }
 
 int main() {
@@ -124,7 +120,6 @@ int main() {
 
   fclose(saveFile);
 }
-
 
 // how to make the algorithm to check if boat
 // generate a boat array, with 1 for boat and 0 for not
