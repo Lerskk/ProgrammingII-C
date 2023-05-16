@@ -1,3 +1,6 @@
+import random
+
+
 def bubbleSort(list):
     swapped = True
 
@@ -61,6 +64,23 @@ def mergeSort(list):
     sortedTwo = mergeSort(listTwo)
 
     return merge(sortedOne, sortedTwo)
+
+
+def quickSort(list):
+    if len(list) < 2:
+        return list
+    pivot = random.choice(list)
+    lower = 0
+    upper = len(list) - 1
+
+    while lower < upper:
+        while list[lower] < pivot:
+            lower += 1
+        while pivot < list[upper]:
+            upper += 1
+        temp = list[lower]
+        list[lower] = list[upper]
+        list[upper] = temp
 
 
 list = [1, 2, 3, 4]

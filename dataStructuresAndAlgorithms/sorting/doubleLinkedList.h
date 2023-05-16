@@ -7,10 +7,13 @@ typedef struct _Node {
   struct _Node *prev;
 } Node;
 
-typedef Node *DoubleLinkedList;
+typedef struct {
+  Node *head;
+  Node *tail;
+} DoubleLinkedList;
 
-DoubleLinkedList addAtStart(DoubleLinkedList list, int data);
+DoubleLinkedList *addAtStart(DoubleLinkedList *list, int data);
 
-void printList(DoubleLinkedList list);
+void printList(DoubleLinkedList *list);
 
 #endif

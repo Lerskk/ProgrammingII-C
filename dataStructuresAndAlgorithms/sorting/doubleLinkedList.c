@@ -2,34 +2,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-DoubleLinkedList addAtStart(DoubleLinkedList list, int data) {
+DoubleLinkedList *addAtStart(DoubleLinkedList *list, int data) {
   Node *newNode = malloc(sizeof(Node));
-  if (list == NULL) {
+  if (list->head == NULL) {
     newNode->next = newNode;
     newNode->prev = newNode;
     newNode->data = data;
-    return newNode;
+    list->head = newNode;
+    list->tail = newNode;
+    return list;
   }
 
-  newNode->next = list;
-  newNode->prev = list->prev;
+  newNode->next = list->head;
+  newNode->prev = list->tail;
   newNode->data = data;
 
-  list->prev->next = newNode;
-  list->prev = newNode;
+  list->head->prev = newNode;
+  list->head = newNode;
+  list->tail->next = newNode;
 
-  return newNode;
+  return list;
 }
 
-void printList(DoubleLinkedList list) {
-  if (list == NULL)
+void printList(DoubleLinkedList *list) {
+  if (list->head == NULL)
     return;
-  Node *firstNode = list;
-  Node *currentNode = list;
+  Node *currentNode = list->head;
 
   do {
     printf("%p %p %p %d\n", currentNode->prev, currentNode, currentNode->next,
            currentNode->data);
     currentNode = currentNode->next;
-  } while (currentNode != firstNode);
+  } while (currentNode != list->head);
 }
